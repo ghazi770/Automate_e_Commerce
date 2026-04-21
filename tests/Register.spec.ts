@@ -1,37 +1,61 @@
 import { test, expect } from '@playwright/test';
 
-test('Register with random user and auto-login verification', async ({ page }) => {
+test.describe('Registeration Testcases', () => {
 
-  // Generate random user
+ // Generate random user
   const randomEmail = `user_${Date.now()}@mailinator.com`;
   const password = 'Test@12345';
+ const ExistingEmail = 'ghazi.sham001@mailinator.com';
 
-  // Go to register page
-  await page.goto('https://practice.automationtesting.in/my-account/');
+test.beforeEach(async ({ page }) => {
+  await page.goto('https://practice.automationtesting.in/my-account/', {
+    waitUntil: 'domcontentloaded',
+  });
+});
 
-  // Fill registration form
+ test('Case_#001: Verify the Registeration with valid Email & Password', async ({ page }) => {
+
   await page.locator("[name='username']").fill(randomEmail);
-
-await page.locator("[id='reg_password']").fill(password);
-  
-
-  // Submit
+  await page.locator("[id='reg_password']").fill(password);
   await page.locator("[name='register']").click();
 
-  // Assert registration success message
- // await expect(page.locator('.result')).toHaveText('Your registration completed');
+  });
 
-//   // Continue after registration
-//   await page.click('text=Continue');
 
-//   // ✅ Assertion: User is logged in
+  test('Case_#002: Verify the Registeration Fail with invalid Email', async ({ page }) => {
+   
+  await page.getByRole('textbox', { name: 'Email address *', exact: true }).fill('Khanghazi770@21');
+  await page.getByRole('button', { name: 'Register' }).click();
+  await page.getByText('Error: Please enter a valid email address.');
 
-//   // 1. URL check (should NOT be login page)
-//   await expect(page).toHaveURL('https://demo.nopcommerce.com/');
+});
 
-//   // 2. "My account" should be visible (means logged in)
-//   await expect(page.locator('text=My account')).toBeVisible();
 
-//   // 3. Logout button should be visible
-//   await expect(page.locator('text=Log out')).toBeVisible();
+test('Case_#003: Verify the Registeration Fail with Empty Email', async ({ page }) => {
+  await page.locator('#reg_password').click();
+  await page.locator('#reg_password').fill('Shaheen@21655');
+  await page.getByRole('button', { name: 'Register' }).click();
+  await page.getByText('Error: Please provide a valid email address.');
+ });
+
+
+test('Case_#004: Verify the Registeration Fail with Empty Password ', async ({ page }) => {
+  
+  await page.getByRole('textbox', { name: 'Email address *', exact: true }).
+  fill('ghazi.shamroz003@gmail.com');
+  await page.getByRole('button', { name: 'Register' }).click();
+  await page.getByText('Error: Please enter an account password.');
+
+});
+
+
+ test('Case_#005: Verify the Registeration Fail with esisting valid Email', async ({ page }) => {
+
+  await page.locator("[name='username']").fill(ExistingEmail);
+  await page.locator("[id='reg_password']").fill(password);
+  await page.locator("[name='register']").click();
+ await page.getByText('Error: An account is already registered with your email address. Please login.');
+
+  });
+
 });
