@@ -40,4 +40,22 @@ test.describe('Login Scenarios', () => {
     await expect(billingSection).toContainText('0050');
   });
 
+
+
+  test('Verify that Shipping details option is visible and clickable', async ({ page }) => {
+
+  const addressSection = page.locator('.woocommerce-Addresses');
+
+
+    await expect(addressSection).toContainText('Ghazi Shamroz');
+    await expect(addressSection).toContainText('Shahdara Lahore');
+    await expect(addressSection).toContainText('Lahore');
+    await expect(addressSection).toContainText('Pakistan');
+    await expect(addressSection).toContainText('0050');
+    await expect(addressSection).toContainText('Pakistan');
+  });
+
+
+
+
 });
