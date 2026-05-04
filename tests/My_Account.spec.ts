@@ -1,11 +1,11 @@
 import { test, expect } from '@playwright/test';
+import { My_AccountPage } from '../Pages/My_Account';
 
-test.describe('Login Scenarios', () => {
+test.describe('Account screen test cases Scenarios', () => {
 
   test.beforeEach(async ({ page }) => {
     await page.goto('https://practice.automationtesting.in/my-account/', {
-      waitUntil: 'domcontentloaded', 
-    });
+      waitUntil: 'domcontentloaded',     });
 
     await page.locator("[name='username']")
       .fill('ghazi.sham001@mailinator.com');
@@ -13,42 +13,42 @@ test.describe('Login Scenarios', () => {
     await page.locator("#password")
       .fill('SShaheen!021');
 
-    await page.locator("[name='login']")
-      .click();
+   await Promise.all([
+  page.waitForNavigation(),
+  page.locator("[name='login']").click()
+]);
 
    
-    await expect(page.getByText(/hello ghazi\.sham001/i)).toBeVisible();
+      await expect(page.getByRole('link', { name: 'Logout' })).toBeVisible();
   });
+
 
   test('Verify that Order option is visible and clickable', async ({ page }) => {
 
- const sidebar = page.getByRole('navigation');
- await sidebar.getByRole('link', { name: 'Orders' }).click();
- await expect(page).toHaveURL('https://practice.automationtesting.in/my-account/orders/');
+ const acc = new My_AccountPage(page);
+    await acc.clickOrderOption();
   });
 
 
-test('Verify that Downloads option is visible and clickable', async ({ page }) => {
+  test('Verify that Downloads option is visible and clickable', async ({ page }) => {
 
-const sidebar = page.getByRole('navigation');
- await sidebar.getByRole('link', { name: 'Downloads' }).click();
- await expect(page).toHaveURL('https://practice.automationtesting.in/my-account/downloads/');
+const acc = new My_AccountPage(page);
+    await acc.clickDownloadsOption();
 
 });
 
 test('Verify that Addresses option is visible and clickable', async ({ page }) => {
-const sidebar = page.getByRole('navigation');
- await sidebar.getByRole('link', { name: 'Addresses' }).click();
- await expect(page).toHaveURL('https://practice.automationtesting.in/my-account/');
-
- });   
+const acc = new My_AccountPage(page);
+    await acc.clickAddressOption();
+});
 
 test('Verify that Account details option is visible and clickable', async ({ page }) => {
   
-const sidebar = page.getByRole('navigation');
- await sidebar.getByRole('link', { name: 'Account Details' }).click();
-await expect(page).toHaveURL('https://practice.automationtesting.in/my-account/edit-account/');
+const acc = new My_AccountPage(page);
+    await acc.clickAccountDetailsOption();
 
-});   
+});  
+
+ 
    
 });
